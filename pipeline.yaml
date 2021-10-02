@@ -58,7 +58,7 @@ Resources:
           Type: OAUTH
           Resource: !Ref CodeBuildSourceCredential
       Artifacts:
-        Type: NO_ARTIFACTS
+        Type: NO_ARTIFACTS 
       Triggers:
         Webhook: true
         FilterGroups:
