@@ -1,21 +1,69 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Lambda function with cfn-response .
+Description: Lambda function with cfn-response.
 Resources:
   myfunc:
     Type: AWS::Lambda::Function
     Properties:
       Runtime: python3.7
       Handler: index.handler
+      Role: !GetAtt rolaIam.Arn
+      Environment:
+        Variables:
+          COMPETE_RANDOM: !Ref parameter
       Code:
         ZipFile: |
             import os
             import boto3
             from datetime import datetime
             def handler(event, context):
-              print(event)
+              # print(event)
+              param_name = os.environ['COMPETE_RANDOM']
               print('My Test code here')
               job_start = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-              print(job_start)
-      Description: Invoke a function during stack creation
-      Role: arn:aws:iam::333974312216:role/lambda-full-role
-      
+
+              client = boto3.client('ssm')
+              response = client.get_parameter(
+                  Name=param_name
+              )
+              print(response.get('Parameter').get('Value'))              
+              put_response = client.put_parameter(
+                  Name=param_name,
+                  Value=job_start,
+                  Type='String',
+                  Overwrite=True
+              )
+              print(put_response)
+
+      Description: Invoke a function during stack creation.
+
+  parameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: /test/lambda
+      Type: String
+      Value: '-1'
+      Description: SSM Parameter for running date command.
+
+  rolaIam:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "ssm:PutParameter"
+                  - "ssm:GetParameter"
+                Resource: !Sub 'arn:aws:ssm:::parameter/test/lambda*'
