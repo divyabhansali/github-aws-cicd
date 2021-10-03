@@ -16,6 +16,6 @@ Resources:
               print('My Test code here')
               job_start = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
               print(job_start)
-      Description: Invoke a function during stack creation.
+      Description: Invoke a function during stack creation
       Role: arn:aws:iam::333974312216:role/lambda-full-role
       
