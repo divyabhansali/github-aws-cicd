@@ -3,7 +3,7 @@ Description: Lambda function with cfn-response.
 Resources:
   myfunc:
     Type: AWS::Lambda::Function
-    FunctionName: demo-lambda-aws-cicd2
+    FunctionName: This_is_new_name
     Properties:
       Runtime: python3.7
       Handler: index.handler
