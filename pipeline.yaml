@@ -12,24 +12,10 @@ Resources:
             import boto3
             from datetime import datetime
             def handler(event, context):
-              # print(event)
-              param_name = os.environ['COMPETE_RANDOM']
+              print(event)
               print('My Test code here')
               job_start = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-              client = boto3.client('ssm')
-              response = client.get_parameter(
-                  Name=param_name
-              )
-              print(response.get('Parameter').get('Value'))              
-              put_response = client.put_parameter(
-                  Name=param_name,
-                  Value=job_start,
-                  Type='String',
-                  Overwrite=True
-              )
-              print(put_response)
-
+              print(job_start)
       Description: Invoke a function during stack creation.
       Role: arn:aws:iam::333974312216:role/lambda-full-role
       
