@@ -3,8 +3,8 @@ Description: Lambda function with cfn-response.
 Resources:
   myfunc:
     Type: AWS::Lambda::Function
-    FunctionName: This_is_new_name
     Properties:
+      FunctionName: This_is_new_name
       Runtime: python3.7
       Handler: index.handler
       Role: !GetAtt rolaIam.Arn
