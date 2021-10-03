@@ -6,10 +6,6 @@ Resources:
     Properties:
       Runtime: python3.7
       Handler: index.handler
-      Role: !GetAtt rolaIam.Arn
-      Environment:
-        Variables:
-          COMPETE_RANDOM: !Ref parameter
       Code:
         ZipFile: |
             import os
@@ -35,35 +31,5 @@ Resources:
               print(put_response)
 
       Description: Invoke a function during stack creation.
-
-  parameter:
-    Type: AWS::SSM::Parameter
-    Properties:
-      Name: /test/lambda
-      Type: String
-      Value: '-1'
-      Description: SSM Parameter for running date command.
-
-  rolaIam:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: "2012-10-17"
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - lambda.amazonaws.com
-            Action:
-              - 'sts:AssumeRole'
-      Path: /
-      Policies:
-        - PolicyName: root
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Action:
-                  - "ssm:PutParameter"
-                  - "ssm:GetParameter"
-                Resource: !Sub 'arn:aws:ssm:::parameter/test/lambda*'
+      Role: arn:aws:iam::333974312216:role/lambda-full-role
+      
