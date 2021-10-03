@@ -1,87 +1,69 @@
-AWSTemplateFormatVersion: 2010-09-09
-Description: CI/CD pipeline for github projects
-
-Parameters:
-  GitHubOwner:
-    Type: String
-    AllowedPattern: "[A-Za-z0-9-]+"
-    Default: divyabhansali
-  GitHubRepository:
-    Type: String
-    AllowedPattern: "[A-Za-z0-9-]+"
-  GitHubBranch:
-    Type: String
-    AllowedPattern: "[A-Za-z0-9-]+"
-    Default: master  
-
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Lambda function with cfn-response.
 Resources:
-  CodeBuildServiceRole:
+  myfunc:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.7
+      Handler: index.handler
+      Role: !GetAtt rolaIam.Arn
+      Environment:
+        Variables:
+          COMPETE_RANDOM: !Ref parameter
+      Code:
+        ZipFile: |
+            import os
+            import boto3
+            from datetime import datetime
+            def handler(event, context):
+              # print(event)
+              param_name = os.environ['COMPETE_RANDOM']
+              print('My Test code here')
+              job_start = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+              client = boto3.client('ssm')
+              response = client.get_parameter(
+                  Name=param_name
+              )
+              print(response.get('Parameter').get('Value'))              
+              put_response = client.put_parameter(
+                  Name=param_name,
+                  Value=job_start,
+                  Type='String',
+                  Overwrite=True
+              )
+              print(put_response)
+
+      Description: Invoke a function during stack creation.
+
+  parameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: /test/lambda
+      Type: String
+      Value: '-1'
+      Description: SSM Parameter for running date command.
+
+  rolaIam:
     Type: 'AWS::IAM::Role'
     Properties:
       AssumeRolePolicyDocument:
-        Version: 2012-10-17
+        Version: "2012-10-17"
         Statement:
           - Effect: Allow
             Principal:
-              Service: codebuild.amazonaws.com
-            Action: 'sts:AssumeRole'
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
       Policies:
         - PolicyName: root
           PolicyDocument:
-            Version: 2012-10-17
+            Version: "2012-10-17"
             Statement:
-              - Sid: CloudWatchLogsPolicy
-                Effect: Allow
+              - Effect: Allow
                 Action:
-                  - 'logs:CreateLogGroup'
-                  - 'logs:CreateLogStream'
-                  - 'logs:PutLogEvents'
-                Resource: '*'
-              - Sid: S3GetObjectPolicy
-                Effect: Allow
-                Action:
-                  - 's3:GetObject'
-                  - 's3:GetObjectVersion'
-                Resource: '*'
-              - Sid: S3PutObjectPolicy
-                Effect: Allow
-                Action:
-                  - 's3:PutObject'
-                Resource: '*'
-              - Sid: S3BucketIdentity
-                Effect: Allow
-                Action:
-                  - 's3:GetBucketAcl'
-                  - 's3:GetBucketLocation'
-                Resource: '*'
-  CodeBuildSourceCredential:
-    Type: 'AWS::CodeBuild::SourceCredential'
-    Properties:
-      AuthType: PERSONAL_ACCESS_TOKEN
-      ServerType: GITHUB
-      Token: '{{resolve:secretsmanager:GITHUB_ACCESS:SecretString:GITHUB_ACCESS_TOKEN}}'
-  CodeBuildProject:
-    Type: 'AWS::CodeBuild::Project'
-    Properties:
-      Name: !Ref 'AWS::StackName'
-      ServiceRole: !GetAtt CodeBuildServiceRole.Arn
-      Source:
-        Type: GITHUB
-        Location: !Sub 'https://github.com/${GitHubOwner}/${GitHubRepository}.git'
-        BuildSpec: buildspec.yaml
-        Auth:
-          Type: OAUTH
-          Resource: !Ref CodeBuildSourceCredential
-      Artifacts:
-        Type: NO_ARTIFACTS
-      Triggers:
-        Webhook: true
-        FilterGroups:
-          - - Type: EVENT
-              Pattern: 'PULL_REQUEST_CREATED, PULL_REQUEST_UPDATED, PULL_REQUEST_REOPENED'
-            - Type: BASE_REF
-              Pattern: !Sub ^refs/heads/${GitHubBranch}$
-      Environment:
-        Type: LINUX_CONTAINER
-        ComputeType: BUILD_GENERAL1_SMALL
-        Image: aws/codebuild/standard:4.0
+                  - "ssm:PutParameter"
+                  - "ssm:GetParameter"
+                Resource: !Sub 'arn:aws:ssm:::parameter/test/lambda*'
