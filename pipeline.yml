@@ -264,7 +264,7 @@ Parameters:
   #                 - 's3:PutObject'
   #               Resource: '*'
   #             - Sid: S3BucketIdentity
-  #               Effect: Allow
+  #               Effect: Allow 
   #               Action:
   #                 - 's3:GetBucketAcl'
   #                 - 's3:GetBucketLocation'
