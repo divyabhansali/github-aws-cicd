@@ -56,7 +56,7 @@ Resources:
         - AttributeName: telephone
           AttributeType: S
         - AttributeName: telephonepswd
-          AttributeType: N                              
+          AttributeType: 'N'                              
       KeySchema:
         - AttributeName: firstname
           KeyType: HASH
