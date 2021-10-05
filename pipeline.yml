@@ -49,19 +49,19 @@ Resources:
       TableName:
         Ref: DynamoDBTableName
       AttributeDefinitions:
-        - AttributeName: firstname
-          AttributeType: S
-        - AttributeName: secondname
-          AttributeType: S
-        - AttributeName: telephone
-          AttributeType: S
-        - AttributeName: telephonepswd
-          AttributeType: 'N'                              
+        - AttributeName: "firstname"
+          AttributeType: "S"
+        - AttributeName: "secondname"
+          AttributeType: "S"
+        # - AttributeName: "telephone"
+        #   AttributeType: "S"
+        # - AttributeName: "telephonepswd"
+        #   AttributeType: "N"                              
       KeySchema:
-        - AttributeName: firstname
-          KeyType: HASH
-        - AttributeName: secondname
-          KeyType: RANGE         
+        - AttributeName: "firstname"
+          KeyType: "HASH"
+        - AttributeName: "secondname"
+          KeyType: "RANGE"         
       ProvisionedThroughput:
         ReadCapacityUnits: '5'
         WriteCapacityUnits: '5'
