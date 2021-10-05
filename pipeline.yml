@@ -60,6 +60,8 @@ Resources:
       KeySchema:
         - AttributeName: firstname
           KeyType: HASH
+        - AttributeName: secondname
+          KeyType: RANGE         
       ProvisionedThroughput:
         ReadCapacityUnits: '5'
         WriteCapacityUnits: '5'
