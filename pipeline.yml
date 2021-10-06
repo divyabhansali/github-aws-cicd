@@ -8,24 +8,22 @@ Resources:
     Properties: 
       AttributeDefinitions: 
         - 
-          AttributeName: "FirstName"
+          AttributeName: "firstname"
           AttributeType: "S"
         - 
-          AttributeName: "LastName"
+          AttributeName: "lastname"
           AttributeType: "S"
         - 
-          AttributeName: "Telephone"
+          AttributeName: "telephone"
           AttributeType: "S"
         - 
-          AttributeName: "TelephonePassowrd"
+          AttributeName: "telephonepassword"
           AttributeType: "S"
       KeySchema: 
         - 
-          AttributeName: "FirstName"
+          AttributeName: "firstname"
           KeyType: "HASH"
-        - 
-          AttributeName: "LastName"
-          KeyType: "RANGE"
+
       ProvisionedThroughput: 
         ReadCapacityUnits: "5"
         WriteCapacityUnits: "5"
