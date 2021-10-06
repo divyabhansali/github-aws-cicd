@@ -111,13 +111,30 @@ Resources:
                   - 'dynamodb:Scan'
                   - 'dynamodb:Query'
                   - 'dynamodb:UpdateItem'
-                Resource: 'arn:aws:lambda:ap-south-1:333974312216:function:demp-lambda-func'
+                Resource: '*'
               - Effect: Allow
                 Action:
                   - 'logs:CreateLogStream'
                   - 'logs:CreateLogGroup'
                   - 'logs:PutLogEvents'
                 Resource: '*'
+              - Sid: S3GetObjectPolicy
+                Effect: Allow
+                Action:
+                  - 's3:GetObject'
+                  - 's3:GetObjectVersion'
+                Resource: '*'
+              - Sid: S3PutObjectPolicy
+                Effect: Allow
+                Action:
+                  - 's3:PutObject'
+                Resource: '*'
+              - Sid: S3BucketIdentity
+                Effect: Allow
+                Action:
+                  - 's3:GetBucketAcl'
+                  - 's3:GetBucketLocation'
+                Resource: '*'                
 
 
 Parameters:
