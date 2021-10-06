@@ -10,13 +10,30 @@ Resources:
         - 
           AttributeName: "firstname"
           AttributeType: "S"
-
+        - 
+          AttributeName: "lastname"
+          AttributeType: "S"
+        - 
+          AttributeName: "telephone"
+          AttributeType: "S"
+        - 
+          AttributeName: "telephonepassword"
+          AttributeType: "S"
       KeySchema: 
         - 
           AttributeName: "firstname"
           KeyType: "HASH"
+        - 
+          AttributeName: "lastname"
+          KeyType: "RANGE"
+        - 
+          AttributeName: "telephone"
+          KeyType: "RANGE"
+        - 
+          AttributeName: "telephonepassword"
+          KeyType: "RANGE"          
 
       ProvisionedThroughput: 
         ReadCapacityUnits: "5"
         WriteCapacityUnits: "5"
-      TableName: "assingment_table" 
+      TableName: "assingment_table1" 
