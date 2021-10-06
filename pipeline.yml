@@ -1,8 +1,7 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: CI/CD pipeline for github projects
+
 Resources:
-AWSTemplateFormatVersion: "2010-09-09"
-Resources: 
   myDynamoDBTable: 
     Type: AWS::DynamoDB::Table
     Properties: 
@@ -10,7 +9,7 @@ Resources:
         - 
           AttributeName: "firstname"
           AttributeType: "S"
-
+      
       KeySchema: 
         - 
           AttributeName: "firstname"
@@ -21,8 +20,66 @@ Resources:
         WriteCapacityUnits: "5"
       TableName: "assingment_table1" 
 
+  LambdaFunc:
+    Type: AWS::Lambda::Function
+    Properties: 
+      Runtime: python3.7
+      FunctionName: lambda_dynamo
+      Handler: index.handler
+      Role: !GetAtt rolaIam.Arn    
+      Code: 
+        ZipFile: |
+            import os
+            import boto3
+            from datetime import datetime
+            def handler(event, context):
+              print(event)
+              client = boto3.resource('dynamodb')
+              table = client.Table('assingment_table1')
+              info1 = table.scan()['Items']
+              listperson = []
+              for i in info1:
+                listperson.append(i['firstname'])
+              print(info1)
+              return None
+      Description: Lambda to interact with dynamo db table
+      Role : !GetAtt lambdarole
 
 
+  lambdarole:
+    Type : 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: Stmt1633547502602
+          Action: 'lambda:*'
+          Effect: Allow
+          Resource: 'arn:aws:lambda:ap-south-1:333974312216:function:demp-lambda-func'    
+
+  rolaIam:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "ssm:PutParameter"
+                  - "ssm:GetParameter"
+                Resource: !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/test/lambda*'
 
   IAMRole:
     Type: 'AWS::IAM::Role'
@@ -60,53 +117,6 @@ Resources:
                   - 'logs:CreateLogStream'
                   - 'logs:CreateLogGroup'
                   - 'logs:PutLogEvents'
-                Resource: '*'
-
-
-  IAMRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - lambda.amazonaws.com
-            Action:
-              - 'sts:AssumeRole'
-      Path: /
-      Policies:
-        - PolicyName: Policy_api-lambda-db
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Effect: Allow
-                Action:
-                  - 'dynamodb:BatchGetItem'
-                  - 'dynamodb:BatchWriteItem'
-                  - 'dynamodb:TagResource'
-                  - 'dynamodb:UntagResource'
-                  - 'dynamodb:PutItem'
-                  - 'dynamodb:DeleteItem'
-                  - 'dynamodb:GetItem'
-                  - 'dynamodb:Scan'
-                  - 'dynamodb:Query'
-                  - 'dynamodb:UpdateItem'
-                Resource: '*'
-              - Effect: Allow
-                Action:
-                  - 'logs:CreateLogStream'
-                  - 'logs:CreateLogGroup'
-                  - 'logs:PutLogEvents'
-                Resource: '*'
-              - Effect: Allow
-                Action:
-                  - 'ec2:DescribeNetworkInterfaces'
-                  - 'ec2:CreateNetworkInterface'
-                  - 'ec2:DeleteNetworkInterface'
-                  - 'ec2:DescribeInstances'
-                  - 'ec2:AttachNetworkInterface'
                 Resource: '*'
 
 
