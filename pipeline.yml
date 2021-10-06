@@ -1,6 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: CI/CD pipeline for github projects
-
 Resources:
 AWSTemplateFormatVersion: "2010-09-09"
 Resources: 
