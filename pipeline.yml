@@ -46,40 +46,40 @@ Resources:
       #Role : !GetAtt IAMRole
 
 
-  lambdarole:
-    Type : 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: "2012-10-17"
-        Statement:
-          - Sid: Stmt1633547502602
-          Action: 'lambda:*'
-          Effect: Allow
-          Resource: 'arn:aws:lambda:ap-south-1:333974312216:function:demp-lambda-func'    
+  # lambdarole:
+  #   Type : 'AWS::IAM::Role'
+  #   Properties:
+  #     AssumeRolePolicyDocument:
+  #       Version: "2012-10-17"
+  #       Statement:
+  #         - Sid: Stmt1633547502602
+  #         Action: 'lambda:*'
+  #         Effect: Allow
+  #         Resource: 'arn:aws:lambda:ap-south-1:333974312216:function:demp-lambda-func'    
 
-  rolaIam:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: "2012-10-17"
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - lambda.amazonaws.com
-            Action:
-              - 'sts:AssumeRole'
-      Path: /
-      Policies:
-        - PolicyName: root
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Action:
-                  - "ssm:PutParameter"
-                  - "ssm:GetParameter"
-                Resource: !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/test/lambda*'
+  # rolaIam:
+  #   Type: 'AWS::IAM::Role'
+  #   Properties:
+  #     AssumeRolePolicyDocument:
+  #       Version: "2012-10-17"
+  #       Statement:
+  #         - Effect: Allow
+  #           Principal:
+  #             Service:
+  #               - lambda.amazonaws.com
+  #           Action:
+  #             - 'sts:AssumeRole'
+  #     Path: /
+  #     Policies:
+  #       - PolicyName: root
+  #         PolicyDocument:
+  #           Version: "2012-10-17"
+  #           Statement:
+  #             - Effect: Allow
+  #               Action:
+  #                 - "ssm:PutParameter"
+  #                 - "ssm:GetParameter"
+  #               Resource: !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/test/lambda*'
 
   IAMRole:
     Type: 'AWS::IAM::Role'
