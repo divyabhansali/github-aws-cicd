@@ -10,15 +10,7 @@ Resources:
         - 
           AttributeName: "firstname"
           AttributeType: "S"
-        - 
-          AttributeName: "lastname"
-          AttributeType: "S"
-        - 
-          AttributeName: "telephone"
-          AttributeType: "S"
-        - 
-          AttributeName: "telephonepassword"
-          AttributeType: "S"
+
       KeySchema: 
         - 
           AttributeName: "firstname"
