@@ -43,7 +43,7 @@ Resources:
               print(info1)
               return None
       Description: Lambda to interact with dynamo db table
-      Role : !GetAtt IAMRole
+      #Role : !GetAtt IAMRole
 
 
   lambdarole:
