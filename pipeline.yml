@@ -24,7 +24,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties: 
       Runtime: python3.7
-      FunctionName: !Ref LambdaFuncName
+      FunctionName: !GetAtt LambdaFuncName
       Handler: index.handler
       Role: !GetAtt IAMRole.Arn    
       Code: 
@@ -53,6 +53,45 @@ Resources:
               print(response2["ResponseMetadata"]["HTTPStatusCode"])
               return None
       Description: Lambda to interact with dynamo db table
+
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: doc-example-bucket-have-random-name  
+      RoleName : IAMRoleS3     
+
+
+IAMRoleS3:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Deny
+            NotPrincipal:
+              Service:
+                AWS: 'arn:aws:iam::<accountid>:root'
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      Policies:
+        - PolicyName: Policy_s3
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 's3:Get*'
+                  - 's3:List*'
+                Resource: 'arn:aws:s3:::<bucket>/*'
+              - Effect: Allow
+                Action:
+                  - 'logs:CreateLogStream'
+                  - 'logs:CreateLogGroup'
+                  - 'logs:PutLogEvents'
+                Resource: '*'
+
 
   IAMRole:
     Type: 'AWS::IAM::Role'
