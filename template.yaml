@@ -1,0 +1,12 @@
+version: 0.2
+
+env:
+  Variables:
+    ENV_NAME: dev
+
+phases:
+  build:
+    commands:
+      - echo entered the deploy phase
+      - echo Deploy started on `date`
+      - echo Deploy to $ENV_NAME environment...
