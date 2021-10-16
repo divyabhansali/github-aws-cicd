@@ -168,7 +168,6 @@ IAMRoleS3:
                   - 'logs:PutLogEvents'
                 Resource: '*'
 
-
   IAMRole:
     Type: 'AWS::IAM::Role'
     Properties:
