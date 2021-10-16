@@ -229,14 +229,12 @@ Resources:
       Name:
         Ref: APIName
     DependsOn:
-      - LambdaFunction
+      - LambdaFunc
   APIGatewayResource:
     Type: 'AWS::ApiGateway::Resource'
     Properties:
       RestApiId: !Ref APIGatewayRestAPI
-      ParentId: !GetAtt
-        - APIGatewayRestAPI
-        - RootResourceId
+      ParentId: !GetAtt APIGatewayRestAPI
       PathPart:
         Ref: LambdaFuncName
     DependsOn:
@@ -258,7 +256,7 @@ Resources:
         Uri: !Sub
           - >-
             arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFuncNameArn}/invocations
-          - LambdaFuncNameArn: !GetAtt LambdaFunction.Arn
+          - LambdaFuncNameArn: !GetAtt LambdaFunc.Arn
     DependsOn:
       - APIGatewayResource
   APIGatewayDeployment:
@@ -273,7 +271,7 @@ Resources:
     Type: 'AWS::Lambda::Permission'
     Properties:
       Action: 'lambda:InvokeFunction'
-      FunctionName: !GetAtt LambdaFunction.Arn
+      FunctionName: !GetAtt LambdaFunc.Arn
       Principal: apigateway.amazonaws.com
     DependsOn:
       - APIGatewayDeployment
