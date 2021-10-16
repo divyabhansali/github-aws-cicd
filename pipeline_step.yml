@@ -138,7 +138,7 @@ Resources:
       RoleName : IAMRoleS3     
 
 
-IAMRoleS3:
+  IAMRoleS3:
     Type: 'AWS::IAM::Role'
     Properties:
       AssumeRolePolicyDocument:
